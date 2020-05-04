@@ -1,0 +1,208 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BlackjackGame
+{
+
+    class Blackjack
+
+    {
+        static string[] cardsToPlayer = new string[11];
+        static string playerHitStay = "";
+        static int playerTotal = 0;
+        static int cardCount = 1;
+        static int dealerTotal = 0;
+        static Random cardShuffler = new Random();
+        static string playAgain = "Y";
+
+        static void Main(string[] args)
+        {
+            while (playAgain.ToUpper() == "Y")
+            {
+                StartGame();
+                StartGameLoop();
+                Console.WriteLine("Would you like to play again? Select (Y)es or (N)o and hit enter.");
+                PlayAgain();
+            }
+
+        }
+        static void StartGame()
+        {
+            dealerTotal = cardShuffler.Next(15, 22);
+            cardsToPlayer[0] = DealCard();
+            cardsToPlayer[1] = DealCard();
+            DisplayWelcomeMessage();
+        }
+
+        private static void DisplayWelcomeMessage()
+        {
+            string playerName;
+
+            Console.Write("Please enter your name and hit enter: ");
+
+            playerName = Console.ReadLine();
+
+            Console.WriteLine("Welcome to Blackjack, {0}! You were dealt the cards : {1} and {2} ", playerName, cardsToPlayer[0], cardsToPlayer[1]);
+            Console.WriteLine("Your playerTotal is {0} ", playerTotal);
+        }
+        static void StartGameLoop()
+        {
+            do
+            {
+                Console.WriteLine("Would you like to (H)it or (S)tay?  Hit enter after your selection.");
+                playerHitStay = Console.ReadLine().ToUpper();
+            }
+            while (!playerHitStay.Equals("H") && !playerHitStay.Equals("S"));
+
+            if (playerHitStay.Equals("H"))
+            {
+                Hit();
+            }
+
+            if (playerHitStay.Equals("S"))
+            {
+                if (playerTotal > dealerTotal && playerTotal <= 21)
+                {
+                    Console.WriteLine("Congrats! You won the game! The dealer's playerTotal was {0} ", dealerTotal);
+                }
+                else if (playerTotal < dealerTotal)
+                {
+                    Console.WriteLine("Sorry, you lost! The dealer's playerTotal was {0}", dealerTotal);
+                }            
+            }
+            else
+            {
+                Console.WriteLine("I'm sorry. That is not a valid selection");
+            }
+
+            
+        }
+        static void Hit()
+        {
+            cardCount += 1;
+            cardsToPlayer[cardCount] = DealCard();
+            Console.WriteLine("You card is a(n) {0} and your new Total is {1}. ", cardsToPlayer[cardCount], playerTotal);
+
+            if (playerTotal.Equals(21))
+            {
+                Console.WriteLine("You got Blackjack! The dealer's Total was {0}. ", dealerTotal);
+
+            }
+            else if (playerTotal > 21)
+            {
+                Console.WriteLine("You busted! Sorry!. The dealer's Total was {0}", dealerTotal);
+
+            }
+            else if (playerTotal < 21)
+            {
+                do
+                {
+                    Console.WriteLine("Would you like to hit or stay? h for hit s for stay");
+                    playerHitStay = Console.ReadLine().ToUpper();
+                }
+                while (!playerHitStay.Equals("H") && !playerHitStay.Equals("S"));
+                if (playerHitStay.ToUpper() == "H")
+                {
+                    Hit();
+                }
+
+            }
+        }
+
+
+
+        static string DealCard()
+        {
+            int cards = cardShuffler.Next(1, 14);
+            string Card = GetCardValue(cards);
+            return Card;
+        }
+
+
+        static string GetCardValue(int cards)
+        {
+            string Card;
+            switch (cards)
+            {
+                case 1:
+                    Card = "Two"; playerTotal += 2;
+                    break;
+                case 2:
+                    Card = "Three"; playerTotal += 3;
+                    break;
+                case 3:
+                    Card = "Four"; playerTotal += 4;
+                    break;
+                case 4:
+                    Card = "Five"; playerTotal += 5;
+                    break;
+                case 5:
+                    Card = "Six"; playerTotal += 6;
+                    break;
+                case 6:
+                    Card = "Seven"; playerTotal += 7;
+                    break;
+                case 7:
+                    Card = "Eight"; playerTotal += 8;
+                    break;
+                case 8:
+                    Card = "Nine"; playerTotal += 9;
+                    break;
+                case 9:
+                    Card = "Ten"; playerTotal += 10;
+                    break;
+                case 10:
+                    Card = "Jack"; playerTotal += 10;
+                    break;
+                case 11:
+                    Card = "Queen"; playerTotal += 10;
+                    break;
+                case 12:
+                    Card = "King"; playerTotal += 10;
+                    break;
+                case 13:
+                    Card = "Ace"; playerTotal += 11;
+                    break;
+                default:
+                    Card = "2"; playerTotal += 2;
+                    break;
+            }
+            return Card;
+        }
+        static void PlayAgain()
+        {
+
+            do
+            {
+                playAgain = Console.ReadLine().ToUpper();
+            }
+            while (!playAgain.Equals("Y") && !playAgain.Equals("N"));
+
+            if (playAgain.Equals("Y"))
+            {
+                Console.WriteLine("Press enter to restart the game.");
+                Console.ReadLine();
+                Console.Clear();
+                dealerTotal = 0;
+                cardCount = 1;
+                playerTotal = 0;
+            }
+            else if (playAgain.Equals("N"))
+            {
+                ConsoleKeyInfo info = Console.ReadKey();
+                if (info.Key == ConsoleKey.Enter)
+                {
+                    Environment.Exit(0);
+                }
+                else
+                {
+                    Console.Read();
+                    Environment.Exit(0);
+                }
+            }
+        }
+    }
+}
