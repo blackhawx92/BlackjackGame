@@ -41,7 +41,7 @@ namespace BlackjackGame
         {
             string playerName;
 
-            Console.Write("Please enter your name and hit enter: ");
+            Console.Write("Please type in your name and hit enter: ");
 
             playerName = Console.ReadLine();
 
